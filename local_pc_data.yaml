@@ -1,0 +1,19 @@
+names:
+- biker
+- car
+- pedestrian
+- trafficLight-Green
+- trafficLight-Red
+- truck
+nc: 11
+roboflow:
+  license: MIT
+  project: self-driving-car
+  url: https://universe.roboflow.com/roboflow-gw7yv/self-driving-car/dataset/3
+  version: 3
+  workspace: roboflow-gw7yv
+
+path: D:\Coding_\Reflex_\dataset\Self-Driving-Car-3\export\split_data\
+test: test
+train: train
+val: val
