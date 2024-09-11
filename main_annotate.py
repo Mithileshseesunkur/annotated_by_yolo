@@ -4,10 +4,10 @@ import numpy as np
 from PIL import Image
 
 def yolo_(image_path):
-    model = YOLO(r"D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\best.pt")
+    model = YOLO(r"D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\best_300.pt")
 
     source_image = image_path
-    result = model.predict(source_image) #add classes=[...] to predict specific classes 
+    result = model.predict(source_image,classes=[3,4]) #add classes=[...] to predict specific classes 
 
     predicted_classes = []
 
@@ -24,11 +24,11 @@ def yolo_(image_path):
 
     # Save the image to path
     image_name = os.path.basename(image_path)
-    image_save_path = os.path.join(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\photos_annotated_by_yolo\cars_and_stuff_yolo_detected', image_name)
+    image_save_path = os.path.join(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\test_part_2\TL_yolo_detected', image_name)
     im.save(image_save_path)
 
     # Save the predicted classes to path
-    txt_save_path = os.path.join(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\photos_annotated_by_yolo\cars_and_stuff_yolo_detected_labels', os.path.splitext(image_name)[0] + '.txt')
+    txt_save_path = os.path.join(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\test_part_2\TL_yolo_detected_labels', os.path.splitext(image_name)[0] + '.txt')
     with open(txt_save_path, 'w') as f:
         for cls in predicted_classes:
             f.write(cls + '\n')
@@ -41,9 +41,9 @@ def list_files_in_folder(folder_path):
             file_paths.append(os.path.join(root, file))
     return file_paths
 
-folder_path_bikes_cars_etc = r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\photos with GT\chosen_15_bikes_pedestrial_car_truck'
-#folder_path_TL = r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\photos with GT\chosen_15_TL_red_or_green'
-files = list_files_in_folder(folder_path_bikes_cars_etc)
+#folder_path_bikes_cars_etc = r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\photos with GT\test_part_2\chosen_cars_and_stuff_photos'
+folder_path_TL = r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\photos with GT\test_part_2\chosen_TL'
+files = list_files_in_folder(folder_path_TL)
 
 for file in files:
     yolo_(file)
