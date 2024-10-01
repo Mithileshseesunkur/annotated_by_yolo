@@ -67,6 +67,7 @@ for row in range(0,no_rows):
 
     for ans in range(0, w1_ans_df_collected_age_ascend.shape[0]):
         
+        print("ans",ans)
         print(f"ans is {w1_ans_df_collected_age_ascend.iloc[ans]}\n...this is ans from gtw1 {w1_df_GT.iloc[0,ans]}")
 
         
