@@ -90,15 +90,17 @@ for row in range(0,no_rows):
     #----------calculating agreements over answered
 
     #agreements matrix
-    agreements_array=[]
+    agreements_rate_array=[]
 
-    disagreements_array=[]
+    disagreements_rate_array=[]
     
-    unanswered_array=[]
+    unanswered_rate_array=[]
     
 
 
     for array in w1_agreement_matrix:
+
+        #reset count for each loop
         count_1s=0
         count_0s=0
         counts_minus1s=0
@@ -111,13 +113,19 @@ for row in range(0,no_rows):
             else:
                 counts_minus1s+=1
 
-        agreements_array.append(count_1s)
-        disagreements_array.append(count_0s)
-        unanswered_array.append(counts_minus1s)
+        agreement_rate=count_1s/(w1_df_collected_ans.shape[0]-counts_minus1s)
+        disaagreement_rate=count_0s/(w1_df_collected_ans.shape[0]-counts_minus1s)
+        unanswered_rate=counts_minus1s/w1_df_collected_ans.shape[0]
+
+        agreements_rate_array.append(round(agreement_rate,3))
+        disagreements_rate_array.append(round(disaagreement_rate,3))
+        unanswered_rate_array.append(round(unanswered_rate,3))
 
 
     print(w1_agreement_matrix)
-    print(agreements_array,disagreements_array,unanswered_array)
+    print(agreements_rate_array,disagreements_rate_array,unanswered_rate_array)
+
+    #add agreement rate, 
 
 
 
@@ -146,8 +154,10 @@ for row in range(0,no_rows):
 
 
 
-      
-         
+
+
+
+
 #age_completion_rate=
 #print(w1_agreement_count)
 #arrange table by ascending license age
