@@ -90,13 +90,13 @@ for row in range(0,no_rows):
     #----------calculating agreements over answered
 
     #agreements matrix
+    completion_rate_array=[]
+
     agreements_rate_array=[]
 
     disagreements_rate_array=[]
     
     unanswered_rate_array=[]
-    
-
 
     for array in w1_agreement_matrix:
 
@@ -112,22 +112,28 @@ for row in range(0,no_rows):
                 count_0s+=1
             else:
                 counts_minus1s+=1
+        
+        print(f"this is count_1s {count_1s}, this is count_0s {count_0s}, this is count_minus1s {counts_minus1s}")
 
+        completion_rate=(count_1s+count_0s)/w1_df_collected_ans.shape[0]
         agreement_rate=count_1s/(w1_df_collected_ans.shape[0]-counts_minus1s) #over just answered questions
         disaagreement_rate=count_0s/(w1_df_collected_ans.shape[0]-counts_minus1s) #over just answered questions
         unanswered_rate=counts_minus1s/w1_df_collected_ans.shape[0] #over the total amount of questions
 
+        completion_rate_array.append(round(completion_rate,3))
         agreements_rate_array.append(round(agreement_rate,3))
         disagreements_rate_array.append(round(disaagreement_rate,3))
         unanswered_rate_array.append(round(unanswered_rate,3))
 
 print(w1_agreement_matrix)
-print(agreements_rate_array,disagreements_rate_array,unanswered_rate_array)
+print(agreements_rate_array,disagreements_rate_array,unanswered_rate_array,completion_rate_array)
 
 #------------- Adding the new data columns to the DataFrame w1_df_collected
 w1_df_collected['Agreement rate'] = agreements_rate_array
 w1_df_collected['Disagreement rate'] = disagreements_rate_array
 w1_df_collected['Unanswered rate'] = unanswered_rate_array
+w1_df_collected['Completion rate'] = completion_rate_array
+
 print(w1_df_collected)
 
 
