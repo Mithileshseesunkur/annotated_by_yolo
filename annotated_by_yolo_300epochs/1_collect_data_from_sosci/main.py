@@ -1,5 +1,6 @@
 import pandas as pd
 
+#cols of important values 
 gender_col=7
 age_col=8
 license_age=10
@@ -7,14 +8,22 @@ km_driven=11
 
 ques_start=12
 ques_end=102
+likert_start=103
+
+likert_w1_start=94
+likert_w1_end=98
+likert_w2_start=99
+likert_w2_end=102
+
+likert_end=110
 #for codespace
-df_collected=pd.read_excel('/workspaces/annotated_by_yolo/annotated_by_yolo_300epochs/1_collect_data_from_sosci/test.xlsx',usecols=[gender_col,age_col,license_age,km_driven]+list(range(ques_start,ques_end)), skiprows=1)
+#df_collected=pd.read_excel('/workspaces/annotated_by_yolo/annotated_by_yolo_300epochs/1_collect_data_from_sosci/test.xlsx',usecols=[gender_col,age_col,license_age,km_driven]+list(range(ques_start,ques_end)), skiprows=1)
 
-df_GT=pd.read_excel('/workspaces/annotated_by_yolo/annotated_by_yolo_300epochs/1_collect_data_from_sosci/GTsurvey.xlsx')
+#df_GT=pd.read_excel('/workspaces/annotated_by_yolo/annotated_by_yolo_300epochs/1_collect_data_from_sosci/GTsurvey.xlsx')
 
-#df_collected=pd.read_excel(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\1_collect_data_from_sosci\test.xlsx',usecols=[gender_col,age_col,license_age,km_driven]+list(range(ques_start,ques_end)), skiprows=1)
+df_collected=pd.read_excel(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\1_collect_data_from_sosci\test.xlsx',usecols=[gender_col,age_col,license_age,km_driven]+list(range(ques_start,likert_end)), skiprows=1)
 
-#df_GT=pd.read_excel(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\1_collect_data_from_sosci\GTsurvey.xlsx')
+df_GT=pd.read_excel(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\1_collect_data_from_sosci\GTsurvey.xlsx')
 
 
 
@@ -56,22 +65,30 @@ print(f"this is no of rows in collected data: {no_rows}")
 
 print("this")
 
-#---------------------------all agreements, disagreements or unanswered in a matrix, 1 array per row
+#---------------------------all agreements, disagreements or unanswered in a matrix, 1 array per row &likert score
 w1_agreement_matrix=[]
+w1_likert_score_array=[],,
+
 
 for row in range(0,no_rows):
 
     w1_df_collected_ans=w1_df_collected.iloc[row][4:] #only answers from that row
     
     w1_agreements=[]
+    
 
+    #summing w1 likert score
+    w1_likert_score=df_collected.iloc[row][likert_w1_start:likert_w1_end].sum()
+    print(f"w1_likert_score {w1_likert_score}")
+
+    #collecting agreements
     for ans in range(0, w1_df_collected_ans.shape[0]):
         
         print("ans",ans)
         print(f"ans is {w1_df_collected_ans.iloc[ans]}\n...this is ans from gtw1 {w1_df_GT.iloc[0,ans]}")
 
         
-        
+        #check if cell is empty
         if pd.isna(w1_df_collected_ans.iloc[ans]):
 
             w1_agreements.append('-1') #-1 is unanswered
@@ -84,10 +101,15 @@ for row in range(0,no_rows):
         else:
             
             w1_agreements.append('0')        
+
     #agreements collected
     w1_agreement_matrix.append(w1_agreements)
 
-    #----------calculating agreements over answered
+    #w1 likert scores collected
+    w1_likert_score_array.append(w1_likert_score)
+    print(f"w1 likert score array {w1_likert_score_array}")
+
+    #----------calculating metrics: agreement rate, disagreement rate, unanswered rate, completion rate
 
     #agreements matrix
     completion_rate_array=[]
@@ -133,8 +155,12 @@ w1_df_collected['Agreement rate'] = agreements_rate_array
 w1_df_collected['Disagreement rate'] = disagreements_rate_array
 w1_df_collected['Unanswered rate'] = unanswered_rate_array
 w1_df_collected['Completion rate'] = completion_rate_array
+w1_df_collected['Workflow 1 Likert Score'] = w1_likert_score_array
 
-print(w1_df_collected)
+cols_to_drop_final=w1_df_collected.columns[4:34]
+w1_df_final=w1_df_collected.drop(cols_to_drop_final,axis=1)
+
+print(w1_df_final)
 
 
 
