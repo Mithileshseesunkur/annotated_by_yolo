@@ -7,10 +7,14 @@ km_driven=11
 
 ques_start=12
 ques_end=102
+#for codespace
+df_collected=pd.read_excel('/workspaces/annotated_by_yolo/annotated_by_yolo_300epochs/1_collect_data_from_sosci/test.xlsx',usecols=[gender_col,age_col,license_age,km_driven]+list(range(ques_start,ques_end)), skiprows=1)
 
-df_collected=pd.read_excel(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\1_collect_data_from_sosci\test.xlsx',usecols=[gender_col,age_col,license_age,km_driven]+list(range(ques_start,ques_end)), skiprows=1)
+df_GT=pd.read_excel('/workspaces/annotated_by_yolo/annotated_by_yolo_300epochs/1_collect_data_from_sosci/GTsurvey.xlsx')
 
-df_GT=pd.read_excel(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\1_collect_data_from_sosci\GTsurvey.xlsx')
+#df_collected=pd.read_excel(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\1_collect_data_from_sosci\test.xlsx',usecols=[gender_col,age_col,license_age,km_driven]+list(range(ques_start,ques_end)), skiprows=1)
+
+#df_GT=pd.read_excel(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\1_collect_data_from_sosci\GTsurvey.xlsx')
 
 
 
@@ -27,23 +31,23 @@ df_collected.rename(columns={
 
 print(df_collected)
 
-#workflow 1
+#---workflow 1
 w1_col_to_drop=df_collected.columns[34:102]
-w1_df_collected=df_collected.drop(w1_col_to_drop, axis=1)
+w1_df_collected=df_collected.drop(w1_col_to_drop, axis=1) #answers from workflow 2 only
 
 w1_df_GT=df_GT.drop(df_GT.columns[30:],axis=1) #GT for w1 
 print(f"this is w1_df_GT: {w1_df_GT}")
 print(f"this is w1_df_collected: {w1_df_collected}")
 
-#workflow 2
+#---workflow 2
 w2_col_to_drop=df_collected.columns[4:34]
-w2_df_collected=df_collected.drop(w2_col_to_drop, axis=1)
+w2_df_collected=df_collected.drop(w2_col_to_drop, axis=1) #answers ffrom workflow 2 only
 
 w2_df_GT=df_GT.drop(df_GT.columns[0:29],axis=1) #GT fr w2
 print(f"this is w2_df_GT: {w2_df_GT}")
 print(f"this is w2_df_collected: {w2_df_collected}")
 
-
+#no of rows in collected data
 no_rows=len(df_collected)
 
 print(f"this is no of rows in collected data: {no_rows}")
@@ -51,43 +55,98 @@ print(f"this is no of rows in collected data: {no_rows}")
 #the ground truth specific to this survey
 
 print("this")
-#print(df_GT.iloc[0][1]) # iloc to locate exactly by row, col
+
+#---------------------------all agreements, disagreements or unanswered in a matrix, 1 array per row
 w1_agreement_matrix=[]
-
-#arrange table by ascending age
-w1_df_collected_age_ascend=w1_df_collected.sort_values('Age', ascending=True)
-
-#print(w1_df_collected_age_ascend.iloc[0,1])
 
 for row in range(0,no_rows):
 
-    w1_ans_df_collected_age_ascend=w1_df_collected_age_ascend.iloc[row][4:] #only answers from that row
+    w1_df_collected_ans=w1_df_collected.iloc[row][4:] #only answers from that row
     
     w1_agreements=[]
 
-    for ans in range(0, w1_ans_df_collected_age_ascend.shape[0]):
+    for ans in range(0, w1_df_collected_ans.shape[0]):
         
         print("ans",ans)
-        print(f"ans is {w1_ans_df_collected_age_ascend.iloc[ans]}\n...this is ans from gtw1 {w1_df_GT.iloc[0,ans]}")
+        print(f"ans is {w1_df_collected_ans.iloc[ans]}\n...this is ans from gtw1 {w1_df_GT.iloc[0,ans]}")
 
         
         
-        if pd.isna(w1_ans_df_collected_age_ascend.iloc[ans]):
+        if pd.isna(w1_df_collected_ans.iloc[ans]):
 
             w1_agreements.append('-1') #-1 is unanswered
             
         
-        elif w1_ans_df_collected_age_ascend.iloc[ans]==float(w1_df_GT.iloc[0,ans]):
+        elif w1_df_collected_ans.iloc[ans]==float(w1_df_GT.iloc[0,ans]):
            
            w1_agreements.append('1') #1 for agreement, 0 for disagreement
         
         else:
             
             w1_agreements.append('0')        
-    
+    #agreements collected
     w1_agreement_matrix.append(w1_agreements)
 
+    #----------calculating agreements over answered
+
+    #agreements matrix
+    agreements_array=[]
+
+    disagreements_array=[]
+    
+    unanswered_array=[]
+    
+
+
+    for array in w1_agreement_matrix:
+        count_1s=0
+        count_0s=0
+        counts_minus1s=0
+        
+        for element in array:
+            if element=='1':
+                count_1s+=1
+            elif element=='0':
+                count_0s+=1
+            else:
+                counts_minus1s+=1
+
+        agreements_array.append(count_1s)
+        disagreements_array.append(count_0s)
+        unanswered_array.append(counts_minus1s)
+
+
     print(w1_agreement_matrix)
+    print(agreements_array,disagreements_array,unanswered_array)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
          
 #age_completion_rate=
 #print(w1_agreement_count)
