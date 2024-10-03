@@ -65,9 +65,9 @@ print(f"this is no of rows in collected data: {no_rows}")
 
 print("this")
 
-#---------------------------all agreements, disagreements or unanswered in a matrix, 1 array per row &likert score
+#---------------------------all agreements, disagreements or unanswered in a matrix, 1 array per row &likert score for w1
 w1_agreement_matrix=[]
-w1_likert_score_array=[],,
+w1_likert_score_array=[]
 
 
 for row in range(0,no_rows):
@@ -162,9 +162,104 @@ w1_df_final=w1_df_collected.drop(cols_to_drop_final,axis=1)
 
 print(w1_df_final)
 
+print(f"this is w2_collected {w2_df_collected}")
+#---------------------------all agreements, disagreements or unanswered in a matrix, 1 array per row &likert score for w2
+w2_agreement_matrix=[]
+w2_likert_score_array=[]
 
 
+for row in range(0,no_rows):
 
+    w2_df_collected_ans=w2_df_collected.iloc[row][4:64] #only answers from that row
+    
+    w2_agreements=[]
+    print("this is size of w2_collected_ans", w2_df_collected_ans.shape[0])
+
+    #summing w1 likert score
+
+    w2_likert_score=df_collected.iloc[row][likert_w2_start:likert_w2_end].sum()
+    print(f"w1_likert_score {w2_likert_score}")
+
+    #collecting agreements
+    for ans in range(0, w2_df_collected_ans.shape[0]):
+        
+        print("ans",ans)
+        print(f"ans is {w2_df_collected_ans.iloc[ans]}\n...this is ans from gtw2 {w2_df_GT.iloc[0,ans]}")
+
+        
+        #check if cell is empty
+        if pd.isna(w2_df_collected_ans.iloc[ans]):
+
+            w2_agreements.append('-1') #-1 is unanswered
+            
+        
+        elif w2_df_collected_ans.iloc[ans]==float(w2_df_GT.iloc[0,ans]):
+           
+           w2_agreements.append('1') #1 for agreement, 0 for disagreement
+        
+        else:
+            
+            w2_agreements.append('0')        
+
+    #agreements collected
+    w2_agreement_matrix.append(w2_agreements)
+
+    #w1 likert scores collected
+    w2_likert_score_array.append(w2_likert_score)
+    print(f"w1 likert score array {w2_likert_score_array}")
+
+    #----------calculating metrics: agreement rate, disagreement rate, unanswered rate, completion rate
+
+    #agreements matrix
+    completion_rate_array=[]
+
+    agreements_rate_array=[]
+
+    disagreements_rate_array=[]
+    
+    unanswered_rate_array=[]
+
+    for array in w2_agreement_matrix:
+
+        #reset count for each loop
+        count_1s=0
+        count_0s=0
+        counts_minus1s=0
+        
+        for element in array:
+            if element=='1':
+                count_1s+=1
+            elif element=='0':
+                count_0s+=1
+            else:
+                counts_minus1s+=1
+        
+        print(f"this is count_1s {count_1s}, this is count_0s {count_0s}, this is count_minus1s {counts_minus1s}")
+
+        completion_rate=(count_1s+count_0s)/w2_df_collected_ans.shape[0]
+        agreement_rate=count_1s/(w2_df_collected_ans.shape[0]-counts_minus1s) #over just answered questions
+        disaagreement_rate=count_0s/(w2_df_collected_ans.shape[0]-counts_minus1s) #over just answered questions
+        unanswered_rate=counts_minus1s/w2_df_collected_ans.shape[0] #over the total amount of questions
+
+        completion_rate_array.append(round(completion_rate,3))
+        agreements_rate_array.append(round(agreement_rate,3))
+        disagreements_rate_array.append(round(disaagreement_rate,3))
+        unanswered_rate_array.append(round(unanswered_rate,3))
+
+print(w2_agreement_matrix)
+print(agreements_rate_array,disagreements_rate_array,unanswered_rate_array,completion_rate_array)
+
+#------------- Adding the new data columns to the DataFrame w1_df_collected
+w2_df_collected['Agreement rate'] = agreements_rate_array
+w2_df_collected['Disagreement rate'] = disagreements_rate_array
+w2_df_collected['Unanswered rate'] = unanswered_rate_array
+w2_df_collected['Completion rate'] = completion_rate_array
+w2_df_collected['Workflow 2 Likert Score'] = w2_likert_score_array
+
+cols_to_drop_final=w2_df_collected.columns[4:72] 
+w2_df_final=w2_df_collected.drop(cols_to_drop_final,axis=1) #drop answers
+
+print(w2_df_final)
 
 
 
