@@ -28,10 +28,10 @@ def yolo_(image_path):
     im.save(image_save_path)
 
     # Save the predicted classes to path
-    txt_save_path = os.path.join(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\test_part_2\TL_yolo_detected_labels', os.path.splitext(image_name)[0] + '.txt')
-    with open(txt_save_path, 'w') as f:
-        for cls in predicted_classes:
-            f.write(cls + '\n')
+    #txt_save_path = os.path.join(r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\test_part_2\TL_yolo_detected_labels', os.path.splitext(image_name)[0] + '.txt')
+    #with open(txt_save_path, 'w') as f:
+        #for cls in predicted_classes:
+            #f.write(cls + '\n')
 
 #listing all files
 def list_files_in_folder(folder_path):
@@ -42,7 +42,7 @@ def list_files_in_folder(folder_path):
     return file_paths
 
 #folder_path_bikes_cars_etc = r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\photos with GT\test_part_2\chosen_cars_and_stuff_photos'
-folder_path_TL = r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\photos with GT\test_part_2\chosen_TL'
+folder_path_TL = r'D:\Coding_\Reflex_\MA_\yolo_\annotated_by_yolo\annotated_by_yolo_300epochs\test_part_2\TL_orig'
 files = list_files_in_folder(folder_path_TL)
 
 for file in files:
